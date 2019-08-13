@@ -15,7 +15,7 @@ url = 'http://192.168.0.171:3000'
 barcode = sys.argv[1]
 
 #create a folder to save the infos
-newPath = "/home/pi/merchandise/"+barcode
+newPath = "./merchandise/"+barcode
 if(not(os.path.exists(newPath))):
     os.mkdir(newPath)
     
@@ -31,7 +31,7 @@ now_time = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())
 post_data['log_time'] = now_time
 
 #get the weight measurement
-p=os.popen('sudo /home/pi/weight')
+p=os.popen('sudo python/weight')
 x = p.read()
 p.close()
 post_data['weight'] = x
@@ -97,7 +97,7 @@ with open(newPath+'/info.json','a') as json_file:
 
 #play a notifying sound
 pygame.mixer.init()
-pygame.mixer.music.load('/home/pi/ok.mp3')
+pygame.mixer.music.load('voice/ok.mp3')
 pygame.mixer.music.play()
 time.sleep(4)
 pygame.mixer.music.stop()
