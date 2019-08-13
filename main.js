@@ -79,7 +79,7 @@ bleno.on('advertisingStart', function(error) {
     bleno.setServices([primaryService], function(error){
       console.log('setServices: '  + (error ? 'error ' + error : 'success'));
       //execute a python port request program to get the barcode
-      var proc = require('child_process').exec('python3 /home/pi/httpRequest.py',function(err,stdout,stderr){
+      var proc = require('child_process').exec('python3 python/httpRequest.py',function(err,stdout,stderr){
               console.log('[python]executing')
               if(err){
                   console.log(err) 

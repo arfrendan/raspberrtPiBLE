@@ -4,11 +4,11 @@ var exec = require('child_process').exec;
 var execS = require('child_process').execSync;
 
 var fs = require('fs');
-var UUID = require('./UUID')
+var UUID = require('./UUID');
 var bleno = require('bleno');
 var Descriptor = bleno.Descriptor;
 var Characteristic = bleno.Characteristic;
-var event = require('events')
+var event = require('events');
 
 var base64arraybuffer = require('./base64-arraybuffer')
 var gb2312ToBase64 = require('./gb2312ToBase64')
@@ -47,7 +47,7 @@ util.inherits(BluetoothSubscribeCharacteristic,Characteristic);
  * 	2.the recording mode
  * 	  when the scanner get the code, the device will start to register the infos of the merchandise
  * 	  the program will spawn a subprocess for a python script to execute
- * 	  which takes 15 seconds, the subrocess is synchronous
+ * 	  which takes several 15 seconds, the subrocess is synchronous
  * 
  * TODO: other modes for the devices
  *  
@@ -65,7 +65,7 @@ BluetoothSubscribeCharacteristic.prototype.onSubscribe = function(maxValueSize, 
 	switch(mode){
 	  case 1:
 	    console.log('[consumer]the code of this merchandise:'+result.code)
-	    exec('mplayer /home/pi/voice/scanned.mp3',function(err,stdout,stderr){
+	    exec('mplayer voice/scanned.mp3',function(err,stdout,stderr){
 				   if(err){
 					   console.log(err) 
 				   }
@@ -73,12 +73,12 @@ BluetoothSubscribeCharacteristic.prototype.onSubscribe = function(maxValueSize, 
 	    updateValueCallback(new Buffer(result.code));
 	    break;
 	  case 2:
-	    exec('mplayer /home/pi/voice/recording.mp3',function(err,stdout,stderr){
+	    exec('mplayer voice/recording.mp3',function(err,stdout,stderr){
 				   if(err){
 					   console.log(err) 
 				   }
 	    })
-	    execS('python3 /home/pi/merchandise.py '+result.code,timeout = 15000);
+	    execS('python3 python/merchandise.py '+result.code,timeout = 15000);
 	    updateValueCallback(new Buffer('[recording]logging...'));
 	    break;
 	  default:
@@ -89,7 +89,7 @@ BluetoothSubscribeCharacteristic.prototype.onSubscribe = function(maxValueSize, 
     })
     
     //notifying the user by the box
-    exec('mplayer /home/pi/subscribe.mp3',function(err,stdout,stderr){
+    exec('mplayer voice/subscribe.mp3',function(err,stdout,stderr){
 		 if(err){
 			 console.log(err) 
 		 }
@@ -101,7 +101,7 @@ BluetoothSubscribeCharacteristic.prototype.onSubscribe = function(maxValueSize, 
 // switch the mode of the listener to off mode
 BluetoothSubscribeCharacteristic.prototype.onUnsubscribe = function() {
           console.log("[action]Device unsubscribed ");
-          exec('mplayer /home/pi/exit.mp3',function(err,stdout,stderr){
+          exec('mplayer voice/exit.mp3',function(err,stdout,stderr){
 			if(err){
 			 console.log(err) 
 			 console.log(stderr)
@@ -152,7 +152,7 @@ BluetoothSubscribeCharacteristic.prototype.onWriteRequest = function(data, offse
 		    switch(this.http_listener.mode){
 		      case 1: 
 			  console.log('[mode]switch to recording mode')
-			  exec('mplayer /home/pi/voice/mode2.mp3',function(err,stdout,stderr){
+			  exec('mplayer voice/mode2.mp3',function(err,stdout,stderr){
 				   if(err){
 					   console.log(err) 
 				   }
@@ -162,7 +162,7 @@ BluetoothSubscribeCharacteristic.prototype.onWriteRequest = function(data, offse
 			  
 		      case 2:
 			  console.log('[mode]switch to consumer mode')
-			  exec('mplayer /home/pi/voice/mode1.mp3',function(err,stdout,stderr){
+			  exec('mplayer voice/mode1.mp3',function(err,stdout,stderr){
 				   if(err){
 					   console.log(err) 
 				   }
@@ -172,13 +172,9 @@ BluetoothSubscribeCharacteristic.prototype.onWriteRequest = function(data, offse
 		      }
                     break;                                                                            
                 default:
-		      fs.appendFile('/home/pi/test/input.txt', info+"\n",function(err){
-			  if(err){
-			      console.err(err)
-			    }
-		      })
-		      exec('python3 /home/pi/printer2.py "'+info+'"',function(err,stdout,stderr){
-			  exec('mplayer /home/pi/voice/printing.mp3',function(err,stdout,stderr){
+		      
+		      exec('python3 python/printer2.py "'+info+'"',function(err,stdout,stderr){
+			  exec('mplayer voice/printing.mp3',function(err,stdout,stderr){
 			      if(err){
 				  console.log(err) 
 				 }
@@ -196,7 +192,7 @@ BluetoothSubscribeCharacteristic.prototype.onWriteRequest = function(data, offse
 // read the local file and send to the miniprogram
 BluetoothSubscribeCharacteristic.prototype.onReadRequest = async function(offset,callback){
 	console.log("[action]Read request received");
-	exec('mplayer /home/pi/read.mp3',function(err,stdout,stderr){
+	exec('mplayer voice/read.mp3',function(err,stdout,stderr){
 		 
 		 if(err){
 			 console.log(err) 

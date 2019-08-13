@@ -1,9 +1,9 @@
-//var socket = require('socket.io-client')('http://192.168.0.85:7001/terminal');
+// define the server address
 var socket = require('socket.io-client')('http://192.168.0.171:5001');
 var exec = require('child_process').exec;
 
 function printer(socket){
-	exec('sudo python3 /home/pi/test/python/printerCheck.py',function(err,stdout,stderr){
+	exec('sudo python3 python/printerCheck.py',function(err,stdout,stderr){
 			if(err){
 				console.log(err)
 				socket.emit('error',err)
@@ -14,7 +14,7 @@ function printer(socket){
 }
 
 function scanner(socket){
-	exec('sudo python3 /home/pi/test/python/peripherals/scanner.py',function(err,stdout,stderr){
+	exec('sudo python3 python/peripherals/scanner.py',function(err,stdout,stderr){
 			if(err){
 				console.log(err)
 				socket.emit('error',err)
@@ -25,7 +25,7 @@ function scanner(socket){
 }
 
 function temperature(socket){
-	exec('sudo python3 /home/pi/test/python/peripherals/temperature.py',function(err,stdout,stderr){
+	exec('sudo python3 python/peripherals/temperature.py',function(err,stdout,stderr){
 			if(err){
 				console.log(err)
 				socket.emit('error',err)
@@ -35,7 +35,7 @@ function temperature(socket){
 	)
 }
 function weight(socket){
-	exec('sudo python3 /home/pi/test/python/peripherals/weight.py',function(err,stdout,stderr){
+	exec('sudo python3 python/peripherals/weight.py',function(err,stdout,stderr){
 			if(err){
 				console.log(err)
 				socket.emit('error',err)
@@ -45,7 +45,7 @@ function weight(socket){
 	)
 }
 function camera(socket){
-	exec('sudo python3 /home/pi/test/python/peripherals/camera.py',function(err,stdout,stderr){
+	exec('sudo python3 python/peripherals/camera.py',function(err,stdout,stderr){
 			if(err){
 				console.log(err)
 				socket.emit('error',err)
@@ -65,7 +65,7 @@ function device(socket){
 		)
 }
 function serial(socket){
-	exec('sudo python3 /home/pi/test/python/peripherals/serial.py',function(err,stdout,stderr){
+	exec('sudo python3 python/peripherals/serial.py',function(err,stdout,stderr){
 			if(err){
 				console.log(err)
 				socket.emit('error',err)
@@ -168,9 +168,8 @@ function wifi(socket){
 		)
 }
 socket.on('connect',function(){
-	console.log('connected')
+	console.log('[socketio]connected')
 	socket.emit('terminal_check','test')
-	socket.emit('test','test')
 	socket.on(socket.id,function(msg){
 		//console.log('p2p success')
 		console.log(msg)
@@ -248,11 +247,11 @@ socket.on('connect',function(){
 });
 	
 socket.on('disconnect',function(){
-	console.log('disconnected')
+	console.log('[socketio]disconnected')
 	});
 
 
 
 socket.on('receive',function(msg){
-	console.log('receive')
+	console.log('[socket]receive')
 	})
