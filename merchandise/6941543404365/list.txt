@@ -1,0 +1,4 @@
+weight=232
+
+barcode=6941543404365
+logging time:2019-08-13 11:11:56country:中国 
